@@ -1,48 +1,38 @@
 import pandas as pd
 
-# G20 Länder
+master = pd.read_csv("master.csv")
+
 g20 = ['ARG', 'AUS', 'BRA', 'CAN', 'CHN', 'DEU', 'FRA', 'GBR', 
        'IDN', 'IND', 'ITA', 'JPN', 'KOR', 'MEX', 'RUS', 'SAU', 
        'ZAF', 'TUR', 'USA']
 
-def bereinigen(df, wert_name):
-    df = df[df['Country Code'].isin(g20)]
-    df = df[['Country Name', 'Country Code'] + 
-            [col for col in df.columns if col.startswith('200') or col.startswith('201') or col.startswith('202')]]
-    df = df.melt(id_vars=['Country Name', 'Country Code'], 
-                 var_name='Jahr', value_name=wert_name)
-    df['Jahr'] = df['Jahr'].str[:4].astype(int)
-    df[wert_name] = pd.to_numeric(df[wert_name], errors='coerce')
-    return df
+krisen = {
+    'Finanzkrise': (2008, 2009),
+    'Eurokrise': (2010, 2013),
+    'COVID': (2020, 2021)
+}
 
-# CSVs einlesen
-gdp = pd.read_csv("GDP.csv")
-gdp_pc = pd.read_csv("GDP per capita.csv")
-inflation = pd.read_csv("Inflation.csv")
-population = pd.read_csv("Population.csv")
-unemployment = pd.read_csv("Unemployment.csv")
+def gdp_veraenderung(land_code, jahr_von, jahr_bis):
+    land = master[master['Country Code'] == land_code]
+    wert_von = land[land['Jahr'] == jahr_von]['GDP'].values[0]
+    wert_bis = land[land['Jahr'] == jahr_bis]['GDP'].values[0]
+    return ((wert_bis - wert_von) / wert_von) * 100
 
-# Bereinigen
-gdp_clean = bereinigen(gdp, 'GDP')
-print(gdp_clean.head(10))
-print(gdp_clean.shape)
+#ergebnisse = []
+#for land in g20:
+    ergebnisse.append({
+        'Land': land,
+        'Finanzkrise': gdp_veraenderung(land, 2007, 2009),
+        'Eurokrise': gdp_veraenderung(land, 2009, 2013),
+        'COVID': gdp_veraenderung(land, 2019, 2020)
+    })
 
-# Alle bereinigen
-gdp_clean = bereinigen(gdp, 'GDP')
-gdp_pc_clean = bereinigen(gdp_pc, 'GDP_per_Capita')
-inflation_clean = bereinigen(inflation, 'Inflation')
-population_clean = bereinigen(population, 'Population')
-unemployment_clean = bereinigen(unemployment, 'Unemployment')
+#df_ergebnisse = pd.DataFrame(ergebnisse)
+#print(df_ergebnisse.to_string())
+#df_ergebnisse.to_csv("krisen_gdp.csv", index=False)
+#print("Gespeichert!")
+bra = master[master['Country Code'] == 'BRA']
+print(bra[['Jahr', 'GDP']].to_string())
 
-# Zusammenführen
-master = gdp_clean.merge(gdp_pc_clean, on=['Country Name', 'Country Code', 'Jahr'])
-master = master.merge(inflation_clean, on=['Country Name', 'Country Code', 'Jahr'])
-master = master.merge(population_clean, on=['Country Name', 'Country Code', 'Jahr'])
-master = master.merge(unemployment_clean, on=['Country Name', 'Country Code', 'Jahr'])
 
-print(master.head(10))
-print(master.shape)
-print(master.isnull().sum())
 
-master.to_csv("master.csv", index=False)
-print("Master CSV gespeichert!")
