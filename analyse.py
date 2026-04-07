@@ -88,3 +88,31 @@ for land in g20:
 df_gdp_pc = pd.DataFrame(gdp_pc_ergebnisse)
 print(df_gdp_pc.to_string())
 df_gdp_pc.to_csv("krisen_gdp_per_capita.csv", index=False)
+
+# Score berechnen
+def normalisieren(series):
+    return (series - series.min()) / (series.max() - series.min())
+
+score_ergebnisse = []
+for krise in ['Finanzkrise', 'Eurokrise', 'COVID']:
+    gdp_werte = df_ergebnisse[['Land', krise]].copy()
+    unemp_werte = df_unemployment[['Land', krise]].copy()
+    infl_werte = df_inflation[['Land', krise]].copy()
+    
+    merged = gdp_werte.merge(unemp_werte, on='Land', suffixes=('_gdp', '_unemp'))
+    merged = merged.merge(infl_werte, on='Land')
+    merged.columns = ['Land', 'GDP', 'Unemployment', 'Inflation']
+    
+    merged['GDP_norm'] = normalisieren(merged['GDP'])
+    merged['Unemp_norm'] = 1 - normalisieren(merged['Unemployment'])
+    merged['Infl_norm'] = 1 - normalisieren(merged['Inflation'].abs())
+    
+    # Durchschnitt – ignoriert NaN automatisch
+    merged['Score'] = merged[['GDP_norm', 'Unemp_norm', 'Infl_norm']].mean(axis=1, skipna=True)
+    
+    merged['Krise'] = krise
+    score_ergebnisse.append(merged[['Land', 'Krise', 'Score']])
+
+df_score = pd.concat(score_ergebnisse)
+print(df_score.to_string())
+df_score.to_csv("krisen_score.csv", index=False)
