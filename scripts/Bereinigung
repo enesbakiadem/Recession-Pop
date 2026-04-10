@@ -37,5 +37,7 @@ combined = musik.merge(usa, on='year')
 combined = combined[combined['year'].between(2000, 2022)]
 
 print(combined.to_string())
-combined.to_csv("musik_wirtschaft_final.csv", index=False)
+
+combined.to_csv("musik_wirtschaft_final.csv", index=False, decimal=',', sep=';')
+
 print("Gespeichert!")
