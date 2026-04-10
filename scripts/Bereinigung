@@ -21,5 +21,5 @@ korrelation = combined[['Valence', 'Energy', 'Danceability', 'Unemployment']].co
 
 # Speichern
 combined.to_csv("daten/processed/musik_wirtschaft_final.csv", index=False, decimal=',', sep=';')
-korrelation.to_csv("daten/results/korrelation.csv")
+korrelation.to_csv("daten/results/korrelation.csv", decimal=',', sep=';')
 print("Alles gespeichert!")

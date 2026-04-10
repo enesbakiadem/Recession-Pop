@@ -1,0 +1,10 @@
+import pandas as pd
+
+billboard = pd.read_csv("daten/raw/Billboard_Hot100_Songs_Spotify_1946-2022.csv", encoding='latin-1')
+billboard['year'] = billboard['Hot100 Ranking Year']
+
+valence_historisch = billboard.groupby('year')[['Valence', 'Energy', 'Danceability']].mean()
+print(valence_historisch.to_string())
+
+valence_historisch.to_csv("daten/results/valence_historisch.csv", decimal=',', sep=';')
+print("Gespeichert!")
