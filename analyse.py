@@ -116,3 +116,10 @@ for krise in ['Finanzkrise', 'Eurokrise', 'COVID']:
 df_score = pd.concat(score_ergebnisse)
 print(df_score.to_string())
 df_score.to_csv("krisen_score.csv", index=False)
+
+spotify = pd.read_csv("universal_top_spotify_songs.csv")
+print(spotify.shape)
+print(spotify.head())
+print(spotify['snapshot_date'].min())
+print(spotify['snapshot_date'].max())
+print(spotify['country'].unique())

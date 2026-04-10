@@ -1,0 +1,41 @@
+import pandas as pd
+
+billboard = pd.read_csv("Billboard_Hot100_Songs_Spotify_1946-2022.csv", encoding='latin-1')
+master = pd.read_csv("master.csv")
+
+billboard['year'] = billboard['Hot100 Ranking Year']
+valence_pro_jahr = billboard.groupby('year')[['Valence', 'Energy', 'Danceability']].mean()
+usa = master[master['Country Code'] == 'USA'][['Jahr', 'GDP', 'Unemployment']].rename(columns={'Jahr': 'year'})
+combined = valence_pro_jahr.reset_index().merge(usa, on='year')
+print(combined.to_string())
+
+korrelation = combined[['Valence', 'Energy', 'Danceability', 'Unemployment']].corr()
+print(korrelation)
+
+combined.to_csv("musik_wirtschaft_usa.csv", index=False)
+korrelation.to_csv("korrelation.csv")
+covid_musik = combined[combined['year'].between(2018, 2022)]
+print(covid_musik.to_string())
+
+rezession_musik = combined[combined['year'].between(2006, 2014)]
+import pandas as pd
+
+# Musikdaten
+billboard = pd.read_csv("Billboard_Hot100_Songs_Spotify_1946-2022.csv", encoding='latin-1')
+billboard['year'] = billboard['Hot100 Ranking Year']
+musik = billboard.groupby('year')[['Valence', 'Energy', 'Danceability']].mean().reset_index()
+
+# Wirtschaftsdaten USA
+master = pd.read_csv("master.csv")
+usa = master[master['Country Code'] == 'USA'][['Jahr', 'GDP', 'Unemployment', 'Inflation']]
+usa = usa.rename(columns={'Jahr': 'year'})
+
+# Zusammenführen
+combined = musik.merge(usa, on='year')
+
+# Nur 2000-2022
+combined = combined[combined['year'].between(2000, 2022)]
+
+print(combined.to_string())
+combined.to_csv("musik_wirtschaft_final.csv", index=False)
+print("Gespeichert!")
