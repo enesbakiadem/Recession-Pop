@@ -30,3 +30,11 @@ und ob er sich bei COVID 2020 wiederholt hat.
 
 ## Tools
 Python, Pandas, SciPy, Power BI
+
+## Methodik
+1. Weltbank Rohdaten bereinigt und auf USA gefiltert
+2. Billboard Hot-100 Daten mit Spotify Audio Features verknüpft
+3. Pearson Korrelationsanalyse zwischen Audio Features und Arbeitslosigkeit
+4. Lag-Analyse (1 Jahr Verzögerung) zur Prüfung ob Musik der Wirtschaft folgt oder umgekehrt
+5. Signifikanztest (p-Wert) zur statistischen Absicherung der Ergebnisse
+6. Visualisierung in Power BI

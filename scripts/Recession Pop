@@ -1,0 +1,36 @@
+import pandas as pd
+from scipy import stats
+
+# ── Daten laden ──────────────────────────────────────────────
+billboard = pd.read_csv("daten/raw/Billboard_Hot100_Songs_Spotify_1946-2022.csv", encoding='latin-1')
+billboard['year'] = billboard['Hot100 Ranking Year']
+musik = billboard.groupby('year')[['Valence', 'Energy', 'Danceability']].mean().reset_index()
+
+master = pd.read_csv("daten/processed/master.csv")
+usa = master[master['Country Code'] == 'USA'][['Jahr', 'GDP', 'Unemployment', 'Inflation']]
+usa = usa.rename(columns={'Jahr': 'year'})
+
+# ── Zusammenführen & filtern ─────────────────────────────────
+combined = musik.merge(usa, on='year')
+combined = combined[combined['year'].between(2000, 2022)]
+
+# ── Korrelationsanalyse ──────────────────────────────────────
+korrelation = combined[['Valence', 'Energy', 'Danceability', 'Unemployment']].corr()
+korr, p_wert = stats.pearsonr(combined['Unemployment'], combined['Energy'])
+print(f"Korrelation Energy ↔ Unemployment: {korr:.3f}")
+print(f"P-Wert: {p_wert:.4f}")
+
+# ── Lag-Analyse ──────────────────────────────────────────────
+combined['Energy_lag1'] = combined['Energy'].shift(1)
+combined['Unemployment_lag1'] = combined['Unemployment'].shift(1)
+lag_korr = combined['Unemployment'].corr(combined['Energy_lag1'])
+lag_korr2 = combined['Energy'].corr(combined['Unemployment_lag1'])
+print(f"Unemployment → Energy (1 Jahr später): {lag_korr:.3f}")
+print(f"Energy → Unemployment (1 Jahr später): {lag_korr2:.3f}")
+
+# ── Speichern ────────────────────────────────────────────────
+combined.to_csv("daten/processed/musik_wirtschaft_final.csv", index=False, decimal=',', sep=';')
+korrelation.to_csv("daten/results/korrelation.csv", decimal=',', sep=';')
+combined[['year', 'Unemployment', 'Energy', 'Energy_lag1']].dropna().to_csv("daten/results/lag_analyse.csv", index=False, decimal=',', sep=';')
+
+print("Alles gespeichert!")
