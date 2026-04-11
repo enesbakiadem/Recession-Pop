@@ -22,4 +22,27 @@ korrelation = combined[['Valence', 'Energy', 'Danceability', 'Unemployment']].co
 # Speichern
 combined.to_csv("daten/processed/musik_wirtschaft_final.csv", index=False, decimal=',', sep=';')
 korrelation.to_csv("daten/results/korrelation.csv", decimal=',', sep=';')
-print("Alles gespeichert!")
+# Eskapismus Index
+combined['Eskapismus'] = combined['Energy'] - combined['Valence']
+
+print(combined[['year', 'Energy', 'Valence', 'Eskapismus', 'Unemployment']].to_string())
+
+# Folgt Musik der Wirtschaft oder umgekehrt?
+combined['Energy_lag1'] = combined['Energy'].shift(1)
+combined['Unemployment_lag1'] = combined['Unemployment'].shift(1)
+
+# Korrelation: Unemployment dieses Jahr vs Energy nächstes Jahr
+lag_korr = combined['Unemployment'].corr(combined['Energy_lag1'])
+print("Unemployment → Energy (1 Jahr später):", lag_korr)
+
+# Korrelation: Energy dieses Jahr vs Unemployment nächstes Jahr  
+lag_korr2 = combined['Energy'].corr(combined['Unemployment_lag1'])
+print("Energy → Unemployment (1 Jahr später):", lag_korr2)
+
+
+
+from scipy import stats
+
+korr, p_wert = stats.pearsonr(combined['Unemployment'].dropna(), combined['Energy'].dropna())
+print(f"Korrelation: {korr:.3f}")
+print(f"P-Wert: {p_wert:.4f}")

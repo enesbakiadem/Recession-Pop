@@ -1,23 +1,32 @@
-# Recession Pop – Musikenergie vs Wirtschaftskrisen USA
+# Recession Pop – Musikenergie vs. Wirtschaftskrisen USA
 
 ## Forschungsfrage
 Spiegelt sich die wirtschaftliche Lage der USA in den 
-Musikpräferenzen wider?
+Musikpräferenzen wider – und wenn ja, wie?
 
-## These
-Der Recession Pop Effekt – und warum COVID anders war
+## Hintergrund
+„Recession Pop" ist ein Begriff der ursprünglich für einen 
+Musikstil der späten 2000er Jahre geprägt wurde – Dance-Pop 
+und Electropop die während der Finanzkrise in den USA entstanden.
+Diese Analyse untersucht ob sich dieser kulturelle Effekt 
+statistisch in den Billboard Hot-100 Daten nachweisen lässt 
+und ob er sich bei COVID 2020 wiederholt hat.
 
 ## Datenquellen
-- Billboard Hot-100 1946-2022
-- Weltbank GDP & Unemployment USA
+- Billboard Hot-100 (2000–2022) mit Spotify Audio Features
+- Weltbank: US Arbeitslosigkeit und BIP
 
 ## Ergebnisse
-- Energy korreliert mit Unemployment – außer bei COVID
-- Valence sinkt langfristig unabhängig von Krisen
+- Energy korreliert stark positiv mit Arbeitslosigkeit (r=0.61, p=0.002)
+- Danceability korreliert stark negativ (r=-0.69)
+- Valence zeigt kaum Zusammenhang (r=0.05)
+- Lag-Analyse: Musik folgt Wirtschaft mit ~1 Jahr Verzögerung (r=0.66)
+- COVID 2020: kein Recession Pop Effekt – mögliche Erklärung: digitale Informationsüberflutung
 
-## Limitationen
-- Billboard misst Popularität nicht Hörverhalten
-- Streaming veränderte Charts ab ~2015
+## Limitation
+- Billboard misst Charterfolg nicht Hörverhalten
+- Spotify Audio Features für ältere Songs retroaktiv berechnet
+- Nur 23 Datenpunkte
 
 ## Tools
-Python, Pandas, Power BI
+Python, Pandas, SciPy, Power BI
