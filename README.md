@@ -2,7 +2,7 @@
 
 ## Forschungsfrage
 Spiegelt sich die wirtschaftliche Lage der USA in den 
-Musikpräferenzen wider – und wenn ja, wie?
+Musikpräferenzen wieder – und wenn ja, wie?
 
 ## Hintergrund
 „Recession Pop" ist ein Begriff der ursprünglich für einen 
