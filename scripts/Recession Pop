@@ -4,6 +4,13 @@ from scipy import stats
 # ── Daten laden ──────────────────────────────────────────────
 billboard = pd.read_csv("daten/raw/Billboard_Hot100_Songs_Spotify_1946-2022.csv", encoding='latin-1')
 billboard['year'] = billboard['Hot100 Ranking Year']
+
+# ── Bereinigung ──────────────────────────────────────────────
+billboard = billboard[~billboard['Song'].str.contains('Karaoke', case=False, na=False)]
+billboard = billboard[~billboard['Artist Names'].str.contains('Karaoke', case=False, na=False)]
+print(f"Songs nach Bereinigung: {len(billboard)}")
+
+# ── Musikdaten aggregieren ───────────────────────────────────
 musik = billboard.groupby('year')[['Valence', 'Energy', 'Danceability']].mean().reset_index()
 
 master = pd.read_csv("daten/processed/master.csv")
@@ -28,9 +35,30 @@ lag_korr2 = combined['Energy'].corr(combined['Unemployment_lag1'])
 print(f"Unemployment → Energy (1 Jahr später): {lag_korr:.3f}")
 print(f"Energy → Unemployment (1 Jahr später): {lag_korr2:.3f}")
 
+# ── Song Listen ──────────────────────────────────────────────
+jahre_vergleich = {
+    'Finanzkrise': [2008, 2009, 2010],
+    'COVID': [2020, 2021]
+}
+
+ergebnisse = []
+for krise, jahre in jahre_vergleich.items():
+    data = billboard[billboard['year'].isin(jahre)]
+    
+    top_energie = data.nlargest(10, 'Energy')[['year', 'Song', 'Artist Names', 'Energy']]
+    top_energie['Krise'] = krise
+    top_energie['Typ'] = 'Energetisch'
+    
+    top_mellow = data.nsmallest(10, 'Energy')[['year', 'Song', 'Artist Names', 'Energy']]
+    top_mellow['Krise'] = krise
+    top_mellow['Typ'] = 'Mellow'
+    
+    ergebnisse.append(top_energie)
+    ergebnisse.append(top_mellow)
+
 # ── Speichern ────────────────────────────────────────────────
 combined.to_csv("daten/processed/musik_wirtschaft_final.csv", index=False, decimal=',', sep=';')
 korrelation.to_csv("daten/results/korrelation.csv", decimal=',', sep=';')
 combined[['year', 'Unemployment', 'Energy', 'Energy_lag1']].dropna().to_csv("daten/results/lag_analyse.csv", index=False, decimal=',', sep=';')
-
+pd.concat(ergebnisse).to_csv("daten/results/songs_vergleich.csv", index=False, decimal=',', sep=';')
 print("Alles gespeichert!")

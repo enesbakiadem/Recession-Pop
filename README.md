@@ -1,4 +1,4 @@
-# Recession Pop – Musikenergie vs. Wirtschaftskrisen USA
+# Recession Pop – Musikenergie in Wirtschaftskrisen
 
 ## Forschungsfrage
 Spiegelt sich die wirtschaftliche Lage der USA in den 
@@ -24,13 +24,14 @@ Song automatisch zugewiesen werden:
 - **Danceability** – Wie gut ein Song zum Tanzen geeignet ist (0 = schlecht, 1 = sehr gut)
 
 ## Ergebnisse
-- Energy korreliert stark positiv mit Arbeitslosigkeit (r=0.61, p=0.002)
+- Energy korreliert stark positiv mit Arbeitslosigkeit (r=0.57, p=0.005)
 - Danceability korreliert stark negativ (r=-0.69)
 - Valence zeigt kaum Zusammenhang (r=0.05)
-- Lag-Analyse: Musik folgt Wirtschaft mit ~1 Jahr Verzögerung (r=0.66)
+- Lag-Analyse: Musik folgt Wirtschaft mit ~1 Jahr Verzögerung (r=0.63)
 - COVID 2020: kein Recession Pop Effekt – mögliche Erklärungen: digitale 
   Informationsüberflutung durch Social Media sowie soziale Isolation durch 
   Lockdowns verhinderten kollektiven Eskapismus durch Musik
+
 
 ## Limitation
 - Billboard misst Charterfolg nicht Hörverhalten
@@ -48,3 +49,9 @@ Python (Pandas, SciPy), Power BI für Visualisierung
 4. Lag-Analyse (1 Jahr Verzögerung) zur Prüfung ob Musik der Wirtschaft folgt oder umgekehrt
 5. Signifikanztest (p-Wert) zur statistischen Absicherung der Ergebnisse
 6. Visualisierung in Power BI
+
+## Datenbereinigung
+Karaoke-Versionen wurden aus dem Datensatz entfernt (172 Einträge) 
+da sie keine originalen Billboard Einträge darstellen und 
+fälschlicherweise Audio Features der Karaoke-Produktion 
+statt des Originals tragen.
