@@ -4,6 +4,14 @@ Do economic crises influence the way music sounds?
 
 This project explores whether changes in the economy are reflected in popular music — and whether cultural patterns like “Recession Pop” can be detected in data.
 
+## 📸 Key Visuals
+
+### Music vs Economy
+![Energy vs Unemployment](./visuals/03_energy_vs_unemployment.png)
+
+### Top Energetic Songs
+![Top Songs](./visuals/01_energy_top_songs.png)
+
 ## 🎯 Research Question
 
 Do economic conditions in the United States influence musical characteristics — and if so, how?
