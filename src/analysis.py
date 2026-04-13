@@ -41,6 +41,8 @@ billboard = billboard[
 
 print(f"Songs after cleaning: {len(billboard)}")
 
+billboard["Artist Names"] = billboard["Artist Names"].str.strip("[]").str.replace("'", "")
+
 # ── Aggregate music features by year ─────────────────────────
 musik = (
     billboard.groupby("year")[["Valence", "Energy", "Danceability"]]
@@ -62,6 +64,18 @@ korrelation = combined[
     ["Valence", "Energy", "Danceability", "Unemployment"]
 ].corr()
 
+korrelation = combined[['Valence', 'Energy', 'Danceability', 'Unemployment']].corr()
+
+target = korrelation['Unemployment'].drop('Unemployment').reset_index()
+target.columns = ['Faktor', 'Korrelation']
+
+target.to_csv(
+    RESULTS_DIR / "correlation_clean.csv",
+    index=False,
+    sep=";",
+    decimal=","
+)
+
 korr, p_wert = stats.pearsonr(combined["Unemployment"], combined["Energy"])
 print(f"Correlation Energy ↔ Unemployment: {korr:.3f}")
 print(f"P-value: {p_wert:.4f}")
@@ -82,9 +96,9 @@ ergebnisse = []
 for krise, jahre in CRISIS_YEARS.items():
     data = billboard[billboard["year"].isin(jahre)].copy()
 
-    top_energie = data.nlargest(10, "Energy")[
-        ["year", "Song", "Artist Names", "Energy"]
-    ].copy()
+    top_energie = data.nlargest(20, "Energy")[
+    ["year", "Song", "Artist Names", "Energy"]
+].drop_duplicates(subset=["Song"]).head(10).copy()
     top_energie["Krise"] = krise
     top_energie["Typ"] = "Energetisch"
 
