@@ -1,57 +1,73 @@
-# Recession Pop – Musikenergie in Wirtschaftskrisen
+# Recession Pop: Music in Times of Economic Crisis
 
-## Forschungsfrage
-Spiegelt sich die wirtschaftliche Lage der USA in den 
-Musikpräferenzen wieder – und wenn ja, wie?
+Do economic crises influence the way music sounds?
 
-## Hintergrund
-„Recession Pop" ist ein Begriff der ursprünglich für einen 
-Musikstil der späten 2000er Jahre geprägt wurde – Dance-Pop 
-und Electropop die während der Finanzkrise in den USA entstanden.
-Diese Analyse untersucht ob sich dieser kulturelle Effekt 
-statistisch in den Billboard Hot-100 Daten nachweisen lässt 
-und ob er sich bei COVID 2020 wiederholt hat.
+This project explores whether changes in the economy are reflected in popular music — and whether cultural patterns like “Recession Pop” can be detected in data.
 
-## Datenquellen
-- Billboard Hot-100 (1946–2022) mit Spotify Audio Features
-- Weltbank: US Arbeitslosigkeit und BIP
+## 🎯 Research Question
 
-## Audio Features (Spotify)
-Die Analyse basiert auf drei Spotify Audio Features die jedem 
-Song automatisch zugewiesen werden:
-- **Valence** – Fröhlichkeit eines Songs (0 = sehr melancholisch, 1 = sehr fröhlich)
-- **Energy** – Intensität und Aktivität eines Songs (0 = ruhig, 1 = sehr energetisch)
-- **Danceability** – Wie gut ein Song zum Tanzen geeignet ist (0 = schlecht, 1 = sehr gut)
+Do economic conditions in the United States influence musical characteristics — and if so, how?
 
-## Ergebnisse
-- Energy korreliert stark positiv mit Arbeitslosigkeit (r=0.57, p=0.005)
-- Danceability korreliert stark negativ (r=-0.69)
-- Valence zeigt kaum Zusammenhang (r=0.05)
-- Lag-Analyse: Musik folgt Wirtschaft mit ~1 Jahr Verzögerung (r=0.63)
-- COVID 2020: kein Recession Pop Effekt – mögliche Erklärungen: digitale 
-  Informationsüberflutung durch Social Media sowie soziale Isolation durch 
-  Lockdowns verhinderten kollektiven Eskapismus durch Musik
+## 🧠 Background
 
+“Recession Pop” describes a wave of energetic, dance-oriented music that emerged during the late 2000s financial crisis.
 
-## Limitation
-- Billboard misst Charterfolg nicht Hörverhalten
-- Spotify Audio Features für ältere Songs retroaktiv berechnet
-- Nur 23 Datenpunkte
-- Korrelation ≠ Kausalität
+This project investigates whether this phenomenon can be observed statistically using Billboard Hot 100 data and Spotify audio features — and whether a similar pattern appeared during COVID-19.
 
-## Tools
-Python (Pandas, SciPy), Power BI für Visualisierung
+## 📊 Data Sources
 
-## Methodik
-1. Weltbank Rohdaten bereinigt und auf USA gefiltert
-2. Billboard Hot-100 Daten mit Spotify Audio Features verknüpft
-3. Pearson Korrelationsanalyse zwischen Audio Features und Arbeitslosigkeit
-4. Lag-Analyse (1 Jahr Verzögerung) zur Prüfung ob Musik der Wirtschaft folgt oder umgekehrt
-5. Signifikanztest (p-Wert) zur statistischen Absicherung der Ergebnisse
-6. Visualisierung in Power BI
+- Billboard Hot 100 (1946–2022) with Spotify audio features  
+- World Bank data (USA): unemployment, GDP, inflation  
 
-## Datenbereinigung
-Karaoke-Versionen wurden aus dem Datensatz entfernt (172 Einträge) 
-da sie keine originalen Billboard Einträge darstellen und 
-fälschlicherweise Audio Features der Karaoke-Produktion 
-statt des Originals tragen.
+### Audio Features
+
+- **Valence** – how positive or happy a song sounds  
+- **Energy** – intensity and activity level  
+- **Danceability** – how suitable a song is for dancing  
+
+## ⚙️ Methodology
+
+- Aggregation of Billboard data by year  
+- Merging with US economic indicators  
+- Pearson correlation analysis  
+- Lag analysis (1-year delay)  
+- Statistical significance testing (p-values)  
+- Data visualization using Power BI  
+
+## 📈 Key Results
+
+- **Energy** shows a strong positive correlation with unemployment *(r = 0.57, p = 0.005)*  
+- **Danceability** shows a strong negative correlation *(r = -0.69)*  
+- **Valence** shows almost no relationship *(r = 0.05)*  
+- Lag analysis suggests that music reacts to economic changes with a delay of ~1 year *(r = 0.63)*  
+
+### COVID-19
+
+No clear “Recession Pop” effect was observed during COVID-19.
+
+Possible explanations:
+- Increased digital media consumption  
+- Social isolation reducing collective escapism  
+
+## ⚠️ Limitations
+
+- Billboard reflects chart success, not actual listening behavior  
+- Spotify audio features for older songs are retroactively calculated  
+- Limited sample size (23 data points)  
+- Correlation does not imply causation  
+
+## 🧹 Data Cleaning
+
+- Removed karaoke versions (172 entries)  
+- Ensured consistency of artist and song data  
+
+## 🛠️ Tools
+
+- Python (Pandas, SciPy)  
+- Power BI  
+
+## 💡 Key Insight
+
+Music does not exist in isolation.
+
+It reflects cultural and economic realities — sometimes in ways that are measurable.
