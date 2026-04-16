@@ -81,14 +81,26 @@ print(f"Correlation Energy ↔ Unemployment: {korr:.3f}")
 print(f"P-value: {p_wert:.4f}")
 
 # ── Lag analysis ─────────────────────────────────────────────
-combined["Energy_lag1"] = combined["Energy"].shift(1)
-combined["Unemployment_lag1"] = combined["Unemployment"].shift(1)
+lags = range(-2, 4)  # -2 bis +3 Jahre
+lag_results = []
 
-lag_korr = combined["Unemployment"].corr(combined["Energy_lag1"])
-lag_korr2 = combined["Energy"].corr(combined["Unemployment_lag1"])
+for lag in lags:
+    if lag == 0:
+        korr = combined['Unemployment'].corr(combined['Energy'])
+        label = 'Kein Lag (gleichzeitig)'
+    elif lag > 0:
+        energy_shifted = combined['Energy'].shift(lag)
+        korr = combined['Unemployment'].corr(energy_shifted)
+        label = f'Unemployment -> Energy ({lag} year{"s" if lag > 1 else ""} later)'
+    else:
+        unemployment_shifted = combined['Unemployment'].shift(abs(lag))
+        korr = combined['Energy'].corr(unemployment_shifted)
+        label = f'Energy -> Unemployment ({abs(lag)} year{"s" if abs(lag) > 1 else ""} later)'
+    
+    lag_results.append({'Lag': lag, 'Korrelation': korr, 'Beschreibung': label})
 
-print(f"Unemployment → Energy (1 year later): {lag_korr:.3f}")
-print(f"Energy → Unemployment (1 year later): {lag_korr2:.3f}")
+lag_df = pd.DataFrame(lag_results)
+print(lag_df.to_string(index=False))
 
 # ── Song comparison lists ────────────────────────────────────
 ergebnisse = []
@@ -125,7 +137,7 @@ korrelation.to_csv(
     sep=";",
 )
 
-combined[["year", "Unemployment", "Energy", "Energy_lag1"]].dropna().to_csv(
+lag_df.to_csv(
     RESULTS_DIR / "lag_analyse.csv",
     index=False,
     decimal=",",

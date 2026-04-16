@@ -45,9 +45,9 @@ This project investigates whether this phenomenon can be observed statistically 
 ## 📈 Key Results
 
 - **Energy** shows a strong positive correlation with unemployment *(r = 0.57, p = 0.005)*  
+- Lag analysis suggests that music reacts to economic changes with a delay of ~1 year *(r = 0.63)*  
 - **Danceability** shows a strong negative correlation *(r = -0.69)*  
 - **Valence** shows almost no relationship *(r = 0.05)*  
-- Lag analysis suggests that music reacts to economic changes with a delay of ~1 year *(r = 0.63)*  
 
 ### COVID-19
 
@@ -66,8 +66,8 @@ Possible explanations:
 
 ## 🧹 Data Cleaning
 
-- Removed karaoke versions (172 entries)  
-- Ensured consistency of artist and song data  
+- 172 karaoke entries removed (false audio features)
+- Artist name formatting cleaned
 
 ## 🛠️ Tools
 
