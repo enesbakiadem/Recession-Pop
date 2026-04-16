@@ -64,43 +64,42 @@ korrelation = combined[
     ["Valence", "Energy", "Danceability", "Unemployment"]
 ].corr()
 
-korrelation = combined[['Valence', 'Energy', 'Danceability', 'Unemployment']].corr()
+features = ['Energy', 'Danceability', 'Valence']
+p_results = []
 
-target = korrelation['Unemployment'].drop('Unemployment').reset_index()
-target.columns = ['Faktor', 'Korrelation']
+for feature in features:
+    korr, p = stats.pearsonr(combined['Unemployment'], combined[feature])
+    p_results.append({'Feature': feature, 'Korrelation': korr, 'P-Wert': p})
+    print(f"{feature}: r={korr:.3f}, p={p:.4f}")
 
-target.to_csv(
-    RESULTS_DIR / "correlation_clean.csv",
-    index=False,
-    sep=";",
-    decimal=","
-)
-
-korr, p_wert = stats.pearsonr(combined["Unemployment"], combined["Energy"])
-print(f"Correlation Energy ↔ Unemployment: {korr:.3f}")
-print(f"P-value: {p_wert:.4f}")
+p_df = pd.DataFrame(p_results)
+p_df.to_csv(RESULTS_DIR / "significance.csv", index=False, decimal=',', sep=';')
 
 # ── Lag analysis ─────────────────────────────────────────────
-lags = range(-2, 4)  # -2 bis +3 Jahre
+lags = range(-2, 4)
 lag_results = []
 
-for lag in lags:
-    if lag == 0:
-        korr = combined['Unemployment'].corr(combined['Energy'])
-        label = 'Kein Lag (gleichzeitig)'
-    elif lag > 0:
-        energy_shifted = combined['Energy'].shift(lag)
-        korr = combined['Unemployment'].corr(energy_shifted)
-        label = f'Unemployment -> Energy ({lag} year{"s" if lag > 1 else ""} later)'
-    else:
-        unemployment_shifted = combined['Unemployment'].shift(abs(lag))
-        korr = combined['Energy'].corr(unemployment_shifted)
-        label = f'Energy -> Unemployment ({abs(lag)} year{"s" if abs(lag) > 1 else ""} later)'
-    
-    lag_results.append({'Lag': lag, 'Korrelation': korr, 'Beschreibung': label})
+for feature in ['Energy', 'Danceability', 'Valence']:
+    for lag in lags:
+        if lag >= 0:
+            shifted = combined[feature].shift(lag)
+            korr = combined['Unemployment'].corr(shifted)
+            direction = f"Unemployment → {feature} ({lag}y)"
+        else:
+            shifted = combined['Unemployment'].shift(abs(lag))
+            korr = combined[feature].corr(shifted)
+            direction = f"{feature} → Unemployment ({abs(lag)}y)"
+        
+        lag_results.append({
+            'Feature': feature,
+            'Lag': lag,
+            'Korrelation': korr,
+            'Beschreibung': direction
+        })
 
 lag_df = pd.DataFrame(lag_results)
 print(lag_df.to_string(index=False))
+lag_df.to_csv(RESULTS_DIR / "lag_analyse.csv", index=False, decimal=',', sep=';')
 
 # ── Song comparison lists ────────────────────────────────────
 ergebnisse = []
@@ -152,3 +151,9 @@ pd.concat(ergebnisse).to_csv(
 )
 
 print("All files saved successfully.")
+
+korr_dance, p_dance = stats.pearsonr(combined['Unemployment'], combined['Danceability'])
+korr_val, p_val = stats.pearsonr(combined['Unemployment'], combined['Valence'])
+
+print(f"Danceability: r={korr_dance:.3f}, p={p_dance:.4f}")
+print(f"Valence: r={korr_val:.3f}, p={p_val:.4f}")
