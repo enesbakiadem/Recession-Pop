@@ -2,6 +2,8 @@
 
 Do economic crises influence the way music sounds?
 
+> A data analysis project combining music data with macroeconomic indicators to explore cultural responses to economic crises.
+
 This project explores whether changes in the economy are reflected in popular music — and whether cultural patterns like “Recession Pop” can be detected in data.
 
 ## 📸 Key Visuals
@@ -9,7 +11,7 @@ This project explores whether changes in the economy are reflected in popular mu
 ### Energy vs Unemployment — including the COVID anomaly
 ![Energy vs Unemployment](./visuals/01_energy_vs_unemployment.png)
 
-### Lag Analysis — Evidence of a Delayed Relationship
+### Lag Analysis
 ![Lag Analysis](./visuals/03_lag_analysis.png)
 
 ## 🎯 Research Question
@@ -38,7 +40,7 @@ This project investigates whether this phenomenon can be observed statistically 
 - Aggregation of Billboard data by year  
 - Merging with US economic indicators  
 - Pearson correlation analysis  
-- Lag analysis (-2 to +3 years) to test delayed relationships between economy and music
+- Lag analysis (-2 to +3 years) to test delayed relationships between economy and music  
 - Statistical significance testing (p-values)  
 - Data visualization using Power BI  
 
@@ -65,7 +67,7 @@ This project investigates whether this phenomenon can be observed statistically 
 
 ### COVID-19
 
-— Suggesting that structural changes in music consumption may have altered the relationship.
+No clear “Recession Pop” effect was observed during COVID-19 — suggesting that structural changes in music consumption may have altered the relationship.
 
 Possible explanations:
 - Increased digital media consumption  
