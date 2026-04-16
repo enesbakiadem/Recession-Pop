@@ -6,11 +6,11 @@ This project explores whether changes in the economy are reflected in popular mu
 
 ## 📸 Key Visuals
 
-### Music vs Economy
-![Energy vs Unemployment](./visuals/03_energy_vs_unemployment.png)
+### Energy vs Unemployment — including the COVID anomaly
+![Energy vs Unemployment](./visuals/01_energy_vs_unemployment.png)
 
-### Top Energetic Songs
-![Top Songs](./visuals/01_energy_top_songs.png)
+### Lag Analysis — Evidence of a Delayed Relationship
+![Lag Analysis](./visuals/03_lag_analysis.png)
 
 ## 🎯 Research Question
 
@@ -38,20 +38,34 @@ This project investigates whether this phenomenon can be observed statistically 
 - Aggregation of Billboard data by year  
 - Merging with US economic indicators  
 - Pearson correlation analysis  
-- Lag analysis (1-year delay)  
+- Lag analysis (-2 to +3 years) to test delayed relationships between economy and music
 - Statistical significance testing (p-values)  
 - Data visualization using Power BI  
 
 ## 📈 Key Results
 
-- **Energy** shows a strong positive correlation with unemployment *(r = 0.57, p = 0.005)*  
-- Lag analysis suggests that music reacts to economic changes with a delay of ~1 year *(r = 0.63)*  
-- **Danceability** shows a strong negative correlation *(r = -0.69)*  
-- **Valence** shows almost no relationship *(r = 0.05)*  
+- Overall, results suggest that economic downturns are associated with more energetic but less danceable music.
+
+- **Energy** shows a moderate positive correlation with unemployment  
+  *(r = 0.57, p = 0.0047, 95% CI [0.20, 0.79])*
+
+- **Energy** is also negatively correlated with GDP  
+  *(r = -0.65, p = 0.0008)*, supporting the link between economic downturns and higher musical energy
+
+- **Danceability** shows a strong negative correlation  
+  *(r = -0.68, p = 0.0004)*
+
+- **Valence** shows no meaningful relationship  
+  *(r = 0.06, p = 0.79)*
+
+- Results are consistent across **Pearson and Spearman correlations**, indicating robustness  
+
+- **Lag analysis** suggests that music reacts to economic changes with a short delay  
+  *(strongest correlation at lag -1: r = 0.63)*
 
 ### COVID-19
 
-No clear “Recession Pop” effect was observed during COVID-19.
+— Suggesting that structural changes in music consumption may have altered the relationship.
 
 Possible explanations:
 - Increased digital media consumption  
@@ -74,8 +88,15 @@ Possible explanations:
 - Python (Pandas, SciPy)  
 - Power BI  
 
+## 🔬 Statistical Approach
+
+- Pearson correlation for linear relationships  
+- Spearman correlation for robustness  
+- Confidence intervals to estimate uncertainty  
+- Lag analysis to capture delayed effects  
+
 ## 💡 Key Insight
 
 Music does not exist in isolation.
 
-It reflects cultural and economic realities — sometimes in ways that are measurable.
+This analysis suggests that cultural output may systematically respond to economic conditions — in ways that are measurable, delayed, and statistically robust.
