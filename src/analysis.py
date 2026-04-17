@@ -120,7 +120,7 @@ for indicator in ["Unemployment", "GDP", "Inflation"]:
 lag_rows = []
 
 for lag in range(-2, 4):
-    shifted_energy = combined["Energy"].shift(-lag)
+    shifted_energy = combined["Energy"].shift(lag)
     res = corr_with_ci(combined["Unemployment"], shifted_energy)
     res["Lag"] = lag
     res["Beschreibung"] = f"Unemployment(t) vs Energy(t{lag:+d})"
@@ -185,3 +185,8 @@ pd.concat(ergebnisse).to_csv(
 )
 
 print("All files saved successfully.")
+
+print("\nRobustness check:")
+print(f"Pearson r = {main_res['pearson_r']:.3f}")
+print(f"Spearman rho = {main_res['spearman_rho']:.3f}")
+print("Both consistent?", abs(main_res['pearson_r'] - main_res['spearman_rho']) < 0.1)

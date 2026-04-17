@@ -2,9 +2,11 @@
 
 Do economic crises influence the way music sounds?
 
-> A data analysis project combining music data with macroeconomic indicators to explore cultural responses to economic crises.
+> A data analysis project combining music data with macroeconomic indicators to explore how culture reacts to economic pressure.
 
-This project explores whether changes in the economy are reflected in popular music — and whether cultural patterns like “Recession Pop” can be detected in data.
+I first came across the idea of “Recession Pop” — the claim that music became more energetic during the financial crisis. 
+
+This made me question whether the relationship between economic conditions and music actually holds — and led to this analysis.
 
 ## 📸 Key Visuals
 
@@ -22,7 +24,7 @@ Do economic conditions in the United States influence musical characteristics �
 
 “Recession Pop” describes a wave of energetic, dance-oriented music that emerged during the late 2000s financial crisis.
 
-This project investigates whether this phenomenon can be observed statistically using Billboard Hot 100 data and Spotify audio features — and whether a similar pattern appeared during COVID-19.
+This project explores whether this phenomenon can be observed statistically using Billboard Hot 100 data and Spotify audio features — and whether a similar pattern appeared during COVID-19.
 
 ## 📊 Data Sources
 
@@ -40,30 +42,32 @@ This project investigates whether this phenomenon can be observed statistically 
 - Aggregation of Billboard data by year  
 - Merging with US economic indicators  
 - Pearson correlation analysis  
-- Lag analysis (-2 to +3 years) to test delayed relationships between economy and music  
+- Spearman correlation as a robustness check  
+- Lag analysis (-2 to +3 years) to test delayed relationships  
 - Statistical significance testing (p-values)  
 - Data visualization using Power BI  
 
 ## 📈 Key Results
 
-- Overall, results suggest that economic downturns are associated with more energetic but less danceable music.
+The analysis reveals a consistent pattern:
 
-- **Energy** shows a moderate positive correlation with unemployment  
-  *(r = 0.57, p = 0.0047, 95% CI [0.20, 0.79])*
+During economic downturns, music becomes more energetic while losing danceability.
 
-- **Energy** is also negatively correlated with GDP  
-  *(r = -0.65, p = 0.0008)*, supporting the link between economic downturns and higher musical energy
+At the same time, the data indicates that music does not lead economic changes — it follows them.
 
-- **Danceability** shows a strong negative correlation  
-  *(r = -0.68, p = 0.0004)*
+| Feature       | r     | p-value | Interpretation              |
+|---------------|-------|---------|-----------------------------|
+| Energy        | +0.57 | 0.0047  | Rises with unemployment     |
+| Danceability  | -0.68 | 0.0004  | Falls with unemployment     |
+| Valence       | +0.06 | 0.79    | No meaningful relationship  |
 
-- **Valence** shows no meaningful relationship  
-  *(r = 0.06, p = 0.79)*
+**Lag Analysis (Energy)**  
+The strongest correlation appears one year after the economic shock *(r = 0.63, lag +1)*, suggesting that music reacts to economic conditions with a short delay rather than immediately.
 
-- Results are consistent across **Pearson and Spearman correlations**, indicating robustness  
+**Robustness**  
+To check whether this result is stable, I also used Spearman correlation.
 
-- **Lag analysis** suggests that music reacts to economic changes with a short delay  
-  *(strongest correlation at lag -1: r = 0.63)*
+The result remains similar (ρ = 0.53), which suggests that the relationship is not driven by outliers or strict linear assumptions.
 
 ### COVID-19
 
@@ -80,25 +84,33 @@ Possible explanations:
 - Limited sample size (23 data points)  
 - Correlation does not imply causation  
 
+## 🔬 Statistical Note
+
+Pearson correlation is used here as an exploratory measure of linear association.  
+Given the small sample size and potential violations of statistical assumptions, the results should be interpreted with caution.
+
+The analysis is intended to highlight patterns rather than establish causal relationships.
+
 ## 🧹 Data Cleaning
 
-- 172 karaoke entries removed (false audio features)
-- Artist name formatting cleaned
+- 172 karaoke entries removed (incorrect audio features)  
+- Artist name formatting standardized  
 
 ## 🛠️ Tools
 
 - Python (Pandas, SciPy)  
 - Power BI  
 
-## 🔬 Statistical Approach
-
-- Pearson correlation for linear relationships  
-- Spearman correlation for robustness  
-- Confidence intervals to estimate uncertainty  
-- Lag analysis to capture delayed effects  
-
 ## 💡 Key Insight
 
 Music does not exist in isolation.
 
-This analysis suggests that cultural output may systematically respond to economic conditions — in ways that are measurable, delayed, and statistically robust.
+The results suggest that economic pressure shapes music — but not immediately.
+
+Instead, cultural responses seem to build up over time, reflecting shared experiences.
+
+## 🤖 Use of AI (Transparency)
+
+AI tools were used to support wording, structuring, and parts of the code.
+
+The core analysis, interpretation, and all decisions were developed independently.
