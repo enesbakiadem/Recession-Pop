@@ -18,7 +18,10 @@ def clean_worldbank(filename, value_name):
     df = df[df['Country Code'].isin(G20)]
     df = df[['Country Name', 'Country Code'] +
             [col for col in df.columns
-             if col.startswith('200') or col.startswith('201') or col.startswith('202')]]
+             if col.startswith('196') or col.startswith('197') 
+             or col.startswith('198') or col.startswith('199')
+             or col.startswith('200') or col.startswith('201') 
+             or col.startswith('202')]]
     df = df.melt(id_vars=['Country Name', 'Country Code'],
                  var_name='Jahr', value_name=value_name)
     df['Jahr'] = df['Jahr'].str[:4].astype(int)

@@ -48,7 +48,7 @@ billboard["Artist Names"] = (
 )
 
 # ── Aggregate music features by year ────────────────────────
-musik = (
+music = (
     billboard.groupby("year")[["Valence", "Energy", "Danceability"]]
     .mean()
     .reset_index()
@@ -57,18 +57,20 @@ musik = (
 usa = master.loc[master["Country Code"] == "USA", ["Jahr", "GDP", "Unemployment", "Inflation"]].copy()
 usa = usa.rename(columns={"Jahr": "year"})
 
-# ── Merge and filter time range ─────────────────────────────
-combined = musik.merge(usa, on="year", how="inner")
-combined = combined[combined["year"].between(START_YEAR, END_YEAR)].copy()
-combined = combined.sort_values("year").reset_index(drop=True)
+# ── Merge ────────────────────────────────────────────────────
+combined_all = music.merge(usa, on="year", how="inner")
+combined_all = combined_all.sort_values("year").reset_index(drop=True)
+
+# ── Filter to main analysis window ───────────────────────────
+combined = combined_all[combined_all["year"].between(START_YEAR, END_YEAR)].copy()
 
 # ── Correlation matrix for export ───────────────────────────
-korrelation = combined[
+correlation = combined[
     ["Valence", "Energy", "Danceability", "Unemployment"]
 ].corr()
 
-target = korrelation["Unemployment"].drop("Unemployment").reset_index()
-target.columns = ["Faktor", "Korrelation"]
+target = correlation["Unemployment"].drop("Unemployment").reset_index()
+target.columns = ["Feature", "Correlation"]
 
 target.to_csv(
     RESULTS_DIR / "correlation_clean.csv",
@@ -83,7 +85,6 @@ def corr_with_ci(x, y):
 
     pearson = pearsonr(tmp.iloc[:, 0], tmp.iloc[:, 1])
     ci = pearson.confidence_interval(0.95)
-
     spearman_rho, spearman_p = spearmanr(tmp.iloc[:, 0], tmp.iloc[:, 1])
 
     return {
@@ -98,51 +99,64 @@ def corr_with_ci(x, y):
 
 # ── Main result: Energy vs Unemployment ─────────────────────
 main_res = corr_with_ci(combined["Unemployment"], combined["Energy"])
-print(f"Pearson Energy ↔ Unemployment: {main_res['pearson_r']:.3f}")
+print(f"\nMain result (N={main_res['n']}, {START_YEAR}-{END_YEAR}):")
+print(f"Pearson r  = {main_res['pearson_r']:.3f}, p={main_res['pearson_p']:.4f}")
 print(f"95% CI: [{main_res['ci_low']:.3f}, {main_res['ci_high']:.3f}]")
-print(f"Pearson p-value: {main_res['pearson_p']:.4f}")
-print(f"Spearman rho: {main_res['spearman_rho']:.3f}")
-print(f"Spearman p-value: {main_res['spearman_p']:.4f}")
+print(f"Spearman ρ = {main_res['spearman_rho']:.3f}, p={main_res['spearman_p']:.4f}")
 
 # ── Additional feature correlations ─────────────────────────
-dance_res = corr_with_ci(combined["Unemployment"], combined["Danceability"])
-val_res = corr_with_ci(combined["Unemployment"], combined["Valence"])
-
-print(f"Danceability: r={dance_res['pearson_r']:.3f}, p={dance_res['pearson_p']:.4f}")
-print(f"Valence: r={val_res['pearson_r']:.3f}, p={val_res['pearson_p']:.4f}")
+print("\nAll features:")
+for feature in ["Energy", "Danceability", "Valence"]:
+    res = corr_with_ci(combined["Unemployment"], combined[feature])
+    print(f"{feature}: r={res['pearson_r']:.3f}, p={res['pearson_p']:.4f}")
 
 # ── Energy vs macro indicators ──────────────────────────────
+print("\nMacro indicators:")
 for indicator in ["Unemployment", "GDP", "Inflation"]:
     res = corr_with_ci(combined[indicator], combined["Energy"])
     print(f"Energy ↔ {indicator}: r={res['pearson_r']:.3f}, p={res['pearson_p']:.4f}")
 
 # ── Lag analysis ────────────────────────────────────────────
+print("\nLag analysis:")
 lag_rows = []
 
 for lag in range(-2, 4):
     shifted_energy = combined["Energy"].shift(lag)
     res = corr_with_ci(combined["Unemployment"], shifted_energy)
     res["Lag"] = lag
-    res["Beschreibung"] = f"Unemployment(t) vs Energy(t{lag:+d})"
+    res["Description"] = f"Unemployment(t) vs Energy(t{lag:+d})"
     lag_rows.append(res)
 
 lag_df = pd.DataFrame(lag_rows)
-print(lag_df.to_string(index=False))
+print(lag_df[["Lag", "n", "pearson_r", "pearson_p", "spearman_rho", "spearman_p"]].to_string(index=False))
+
+# ── Robustness check ─────────────────────────────────────────
+print("\nRobustness check:")
+print(f"Pearson r  = {main_res['pearson_r']:.3f}, p={main_res['pearson_p']:.4f}")
+print(f"Spearman ρ = {main_res['spearman_rho']:.3f}, p={main_res['spearman_p']:.4f}")
+print(f"Consistent: {abs(main_res['pearson_r'] - main_res['spearman_rho']) < 0.1}")
+
+# ── Sensitivity test ─────────────────────────────────────────
+print("\nSensitivity test – time window robustness:")
+for start, label in [(1991, "earliest available"), (1997, "25 years"), (2000, "main analysis")]:
+    test = combined_all[combined_all["year"].between(start, END_YEAR)].copy()
+    res = corr_with_ci(test["Unemployment"], test["Energy"])
+    print(f"{start} ({label}): N={res['n']}, r={res['pearson_r']:.3f}, p={res['pearson_p']:.4f}")
 
 # ── Song comparison lists ───────────────────────────────────
-ergebnisse = []
+results = []
 
-for krise, jahre in CRISIS_YEARS.items():
-    data = billboard[billboard["year"].isin(jahre)].copy()
+for crisis, years in CRISIS_YEARS.items():
+    data = billboard[billboard["year"].isin(years)].copy()
 
-    top_energie = (
+    top_energy = (
         data.nlargest(20, "Energy")[["year", "Song", "Artist Names", "Energy"]]
         .drop_duplicates(subset=["Song", "Artist Names"])
         .head(10)
         .copy()
     )
-    top_energie["Krise"] = krise
-    top_energie["Typ"] = "Energetic"
+    top_energy["Crisis"] = crisis
+    top_energy["Type"] = "Energetic"
 
     top_mellow = (
         data.nsmallest(20, "Energy")[["year", "Song", "Artist Names", "Energy"]]
@@ -150,11 +164,11 @@ for krise, jahre in CRISIS_YEARS.items():
         .head(10)
         .copy()
     )
-    top_mellow["Krise"] = krise
-    top_mellow["Typ"] = "Low Energy"
+    top_mellow["Crisis"] = crisis
+    top_mellow["Type"] = "Low Energy"
 
-    ergebnisse.append(top_energie)
-    ergebnisse.append(top_mellow)
+    results.append(top_energy)
+    results.append(top_mellow)
 
 # ── Save outputs ────────────────────────────────────────────
 combined.to_csv(
@@ -164,7 +178,7 @@ combined.to_csv(
     sep=";",
 )
 
-korrelation.to_csv(
+correlation.to_csv(
     RESULTS_DIR / "korrelation.csv",
     decimal=",",
     sep=";",
@@ -177,16 +191,11 @@ lag_df.to_csv(
     sep=";",
 )
 
-pd.concat(ergebnisse).to_csv(
+pd.concat(results).to_csv(
     RESULTS_DIR / "songs_vergleich.csv",
     index=False,
     decimal=",",
     sep=";",
 )
 
-print("All files saved successfully.")
-
-print("\nRobustness check:")
-print(f"Pearson r = {main_res['pearson_r']:.3f}")
-print(f"Spearman rho = {main_res['spearman_rho']:.3f}")
-print("Both consistent?", abs(main_res['pearson_r'] - main_res['spearman_rho']) < 0.1)
+print("\nAll files saved successfully.")

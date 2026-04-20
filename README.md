@@ -4,13 +4,13 @@ Do economic crises influence the way music sounds?
 
 > A data analysis project combining music data with macroeconomic indicators to explore how culture reacts to economic pressure.
 
-I first came across the idea of “Recession Pop” — the claim that music became more energetic during the financial crisis. 
+I first came across the idea of “Recession Pop”, the claim that music became more energetic during the financial crisis. 
 
-This made me question whether the relationship between economic conditions and music actually holds — and led to this analysis.
+This made me question whether the relationship between economic conditions and music actually holds in a measurable way, and led to this analysis.
 
 ## 📸 Key Visuals
 
-### Energy vs Unemployment — including the COVID anomaly
+### Energy vs Unemployment, including the COVID anomaly
 ![Energy vs Unemployment](./visuals/01_energy_vs_unemployment.png)
 
 ### Lag Analysis
@@ -18,13 +18,13 @@ This made me question whether the relationship between economic conditions and m
 
 ## 🎯 Research Question
 
-Do economic conditions in the United States influence musical characteristics — and if so, how?
+Do economic conditions in the United States influence musical characteristics, and if so, how?
 
 ## 🧠 Background
 
 “Recession Pop” describes a wave of energetic, dance-oriented music that emerged during the late 2000s financial crisis.
 
-This project explores whether this phenomenon can be observed statistically using Billboard Hot 100 data and Spotify audio features — and whether a similar pattern appeared during COVID-19.
+This project explores whether this phenomenon can be observed statistically using Billboard Hot 100 data and Spotify audio features, and whether a similar pattern appeared during COVID-19.
 
 ## 📊 Data Sources
 
@@ -36,6 +36,10 @@ This project explores whether this phenomenon can be observed statistically usin
 - **Valence** – how positive or happy a song sounds  
 - **Energy** – intensity and activity level  
 - **Danceability** – how suitable a song is for dancing  
+
+> Note: Spotify audio features are based on proprietary algorithms.  
+> For a discussion of their validity, see:  
+> Vidas et al. (2025): https://www.researchgate.net/publication/395985412_Validating_Spotify's_'Valence'_'Energy'_and_'Danceability'_Audio_Features_for_Music_Psychology_Research
 
 ## ⚙️ Methodology
 
@@ -53,7 +57,7 @@ The analysis reveals a consistent pattern:
 
 During economic downturns, music becomes more energetic while losing danceability.
 
-At the same time, the data indicates that music does not lead economic changes — it follows them.
+At the same time, the data indicates that music does not lead economic changes, it follows them.
 
 | Feature       | r     | p-value | Interpretation              |
 |---------------|-------|---------|-----------------------------|
@@ -71,11 +75,31 @@ The result remains similar (ρ = 0.53), which suggests that the relationship is 
 
 ### COVID-19
 
-No clear “Recession Pop” effect was observed during COVID-19 — suggesting that structural changes in music consumption may have altered the relationship.
+No clear “Recession Pop” effect was observed during COVID-19, suggesting that structural changes in music consumption may have altered the relationship.
 
 Possible explanations:
 - Increased digital media consumption  
 - Social isolation reducing collective escapism  
+- A shift toward more introspective or “negative escapism”, where listeners turn to slower or emotionally heavier music instead of energetic, dance-oriented tracks
+
+## 🔬 Statistical Note
+
+The sample consists of 23 yearly observations (2000–2022).  
+Given the relatively small sample size, the analysis should be interpreted as exploratory rather than conclusive.
+
+The starting point (year 2000) was chosen pragmatically to focus on recent developments and ensure consistent data availability.  
+To assess whether this choice influenced the results, the analysis was repeated starting from 1991 (earliest available macroeconomic data).  
+The overall pattern remains similar, suggesting that the findings are not driven by the selected time window.
+
+To reduce the risk of confirmation bias, multiple features (Energy, Danceability, Valence) were analyzed.  
+Since not all variables show the same relationship, the results are less likely to reflect a single predefined narrative.
+
+Spotify audio features are based on proprietary algorithms and should be interpreted with caution.  
+External research suggests that “Energy” correlates relatively well with perceived intensity, while “Danceability” appears less consistent.  
+For this reason, the interpretation focuses primarily on Energy, while Danceability is treated more cautiously.
+
+Pearson correlation is used as a measure of linear association, while Spearman correlation serves as a robustness check.  
+The similarity between both measures suggests that the results are not driven by outliers or strict linear assumptions.
 
 ## ⚠️ Limitations
 
@@ -83,13 +107,6 @@ Possible explanations:
 - Spotify audio features for older songs are retroactively calculated  
 - Limited sample size (23 data points)  
 - Correlation does not imply causation  
-
-## 🔬 Statistical Note
-
-Pearson correlation is used here as an exploratory measure of linear association.  
-Given the small sample size and potential violations of statistical assumptions, the results should be interpreted with caution.
-
-The analysis is intended to highlight patterns rather than establish causal relationships.
 
 ## 🧹 Data Cleaning
 
@@ -105,7 +122,7 @@ The analysis is intended to highlight patterns rather than establish causal rela
 
 Music does not exist in isolation.
 
-The results suggest that economic pressure shapes music — but not immediately.
+The results suggest that economic pressure shapes music, but not immediately.
 
 Instead, cultural responses seem to build up over time, reflecting shared experiences.
 
