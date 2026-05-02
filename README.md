@@ -1,6 +1,14 @@
 # Recession Pop: Music in Times of Economic Crisis
 
-Do economic crises influence the way music sounds?
+## Project Snapshot
+
+- **Type:** exploratory data analysis  
+- **Tools:** Python · pandas · SciPy · Power BI  
+- **Data:** Billboard Hot 100 · Spotify audio features · World Bank macro indicators  
+- **Focus:** music audio features · unemployment · economic crises  
+- **Output:** correlation analysis, lag analysis, interactive Power BI dashboard
+
+Do economic crises change the sound of popular music?
 
 > A data analysis project combining music data with macroeconomic indicators to explore how culture reacts to economic pressure.
 
